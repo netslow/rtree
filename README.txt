@@ -6,4 +6,4 @@ Current TODO's
 - Implement simple numbers generator
 - Use Long or BigInt for keys
 
-Let me know if I'm not the first who invented such data structure  
+Let me know if I'm not the first one who invented such data structure  
