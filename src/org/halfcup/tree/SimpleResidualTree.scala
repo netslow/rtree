@@ -7,7 +7,7 @@ package org.halfcup.tree
  * @author Stas Pozdnyakov
  *
  */
-class ResidualTree[T] {
+class SimpleResidualTree {
 
   private val baseGenerator: SimpleNumbersGenerator = Generator
 
@@ -25,8 +25,8 @@ class ResidualTree[T] {
     }
   }
 
-  private def findNode(x: Int): Option[Node[T]] = {
-    var node: Node[T] = root
+  private def findNode(x: Int): Option[Node] = {
+    var node: Node = root
     var maxCanBeEncoded = 1
     var value = node.value
     while (x >= maxCanBeEncoded) {
@@ -40,8 +40,8 @@ class ResidualTree[T] {
     Some(node)
   }
 
-  def add(x: Int,value:T) {
-    var node: Node[T] = root
+  def add(x: Int) {
+    var node: Node = root
     var maxCanBeEncoded = 1
     while (x >= maxCanBeEncoded) { //TODO: what if x <= 0?
       val parent = node
@@ -50,14 +50,14 @@ class ResidualTree[T] {
       node = parent.getChildNode(x % baseGenerator.nextSimple(currentBase)) match {
         case Some(x) => x
         case None => {
-          val newNode = new Node[T](baseGenerator.nextSimple(currentBase), None)
+          val newNode = new Node(baseGenerator.nextSimple(currentBase), None)
           parent.setChildNode(x % newNode.base, newNode)
           newNode
         }
       }
       maxCanBeEncoded *= node.base
     }
-    node.value = Some(value)
+    node.value = Some(x)
 
     println("base " + node.base)
   }
@@ -69,19 +69,19 @@ class ResidualTree[T] {
     }
   }
 
-  class Root extends Node[T](1, None)
+  class Root extends Node(1, None)
 
-  class Node[T](val base: Int, var value: Option[T]) {
-    private val child: Array[Node[T]] = new Array(baseGenerator.nextSimple(base))
+  class Node(val base: Int, var value: Option[Int]) {
+    private val child: Array[Node] = new Array(baseGenerator.nextSimple(base))
 
-    def setChildNode(mod: Int, node: Node[T]) {
+    def setChildNode(mod: Int, node: Node) {
       child(mod) = node
     }
 
-    def getChildNode(mod: Int): Option[Node[T]] = {
+    def getChildNode(mod: Int): Option[Node] = {
       child(mod) match {
         case null => None
-        case node: Node[T] => Some(node)
+        case node: Node => Some(node)
       }
     }
 
@@ -94,3 +94,22 @@ class ResidualTree[T] {
   }
 
 }
+/*
+trait SimpleNumbersGenerator {
+  def nextSimple(x: Int): Int
+}
+
+object Generator extends SimpleNumbersGenerator {
+  // just for test
+  private val simpleNumbersList: List[Int] = List(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31)
+  
+
+  def nextSimple(x: Int): Int = {
+    simpleNumbersList.find(_ > x) match {
+      case Some(x) => x
+      case None => throw new Exception("Can't get next simple number")
+    }
+  }
+}
+
+*/
