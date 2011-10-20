@@ -74,7 +74,7 @@ class ResidualTreePar[T] {
     }
     node.value = Some(value)
     
-    println("base " + node.base)
+//    println("base " + node.base)
   }
 
   def remove(x: Int) {

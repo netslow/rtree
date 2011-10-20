@@ -29,9 +29,10 @@ class ResidualTree[T] {
     var node: Node[T] = root
     var maxCanBeEncoded = 1
     var value = node.value
+    val iterator = baseGenerator.iterator
     while (x >= maxCanBeEncoded) {
       var currentBase = node.base
-      node = node.getChildNode(x % baseGenerator.nextSimple(currentBase)) match {
+      node = node.getChildNode(x % iterator.next()) match {
         case Some(x) => x
         case None => return None
       }
@@ -43,15 +44,19 @@ class ResidualTree[T] {
   def add(x: Int,value:T) {
     var node: Node[T] = root
     var maxCanBeEncoded = 1
+    val iterator = baseGenerator.iterator
+    var mod = 0
     while (x >= maxCanBeEncoded) { //TODO: what if x <= 0?
       val parent = node
-
       var currentBase = node.base
-      node = parent.getChildNode(x % baseGenerator.nextSimple(currentBase)) match {
+      val nextSimple = iterator.next()
+      mod = x % nextSimple
+      
+      node = parent.getChildNode(mod) match {
         case Some(x) => x
         case None => {
-          val newNode = new Node[T](baseGenerator.nextSimple(currentBase), None)
-          parent.setChildNode(x % newNode.base, newNode)
+          val newNode = new Node[T](nextSimple, None)
+          parent.setChildNode(mod, newNode)
           newNode
         }
       }
@@ -59,7 +64,7 @@ class ResidualTree[T] {
     }
     node.value = Some(value)
 
-    println("base " + node.base)
+//    println("base " + node.base)
   }
 
   def remove(x: Int) {
