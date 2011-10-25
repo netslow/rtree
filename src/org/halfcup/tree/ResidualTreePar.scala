@@ -8,6 +8,7 @@ import scala.collection.mutable.ListBuffer
 
 /**
  * @author Stas Pozdnyakov
+ * @version 0.1
  *
  */
 class ResidualTreePar[T] {

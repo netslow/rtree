@@ -4,7 +4,9 @@
 package org.halfcup.tree
 
 /**
+ * 
  * @author Stas Pozdnyakov
+ * @version 0.1
  *
  */
 class SimpleResidualTree {
